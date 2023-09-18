@@ -6,6 +6,7 @@ require("dotenv").config();
 // Middleware
 app.use(express.json());
 
+
 // Connect to the database
 const connectDB = require("./config/connectDB");
 connectDB();
@@ -14,12 +15,14 @@ connectDB();
 // const userRoutes = require("./routes/userlogin");
 // const adminRoutes = require("./routes/admin");
 // const announcementRoutes = require("./routes/announcement");
+// const postRoutes = require('./routes/post');
 
 // Use routes
 app.use("/api/user", require('./routes/userlogin'));
+app.use("/api/postt", require("./routes/postt"));
 // app.use("/api/admin", adminRoutes);
 // app.use("/api/announcement", announcementRoutes);
-
+// app.use('/api/posts', postRoutes);
 // Error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);

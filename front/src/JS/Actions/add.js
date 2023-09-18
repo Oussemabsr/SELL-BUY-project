@@ -1,15 +1,16 @@
 import axios from 'axios';
-import { ADD_POST, EDIT_POST, DELETE_POST } from '../ActionTypes/add';
+import { ADD_POST, EDIT_POST, DELETE_POST, FETCH_POSTS_SUCCESS, FETCH_POSTS_FAILURE } from '../ActionTypes/add';
 
 // Action to add a new post
 export const addPost = (newPostData) => async (dispatch) => {
   try {
-    const result = await axios.post('/api/posts', newPostData);
+    const result = await axios.post('/api/postt/add', newPostData); // Updated URL
     dispatch({ type: ADD_POST, payload: result.data });
   } catch (error) {
     console.error('Error adding post:', error);
   }
 };
+
 
 // Action to edit a post
 export const editPost = (postId, updatedPostData) => async (dispatch) => {
@@ -28,5 +29,16 @@ export const deletePost = (postId) => async (dispatch) => {
     dispatch({ type: DELETE_POST, payload: postId });
   } catch (error) {
     console.error('Error deleting post:', error);
+  }
+};
+
+// Action to fetch posts
+export const fetchPosts = () => async (dispatch) => {
+  try {
+    const response = await axios.get('/api/postt/all'); // Update the URL to match your API endpoint
+    const posts = response.data.allPosts; // Assuming the API response contains an array of posts
+    dispatch({ type: FETCH_POSTS_SUCCESS, payload: posts });
+  } catch (error) {
+    dispatch({ type: FETCH_POSTS_FAILURE, payload: error.message });
   }
 };

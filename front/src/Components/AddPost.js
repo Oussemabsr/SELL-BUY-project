@@ -8,26 +8,25 @@ const AddPost = () => {
   const [post, setPost] = useState({
     name: '',
     category: '',
-    picture: null,
+    picture: '',
     description: '',
     coordinates: '',
   });
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-
-    const newValue = name === 'picture' ? files[0] : value;
-
-    setPost({ ...post, [name]: newValue });
+    const { name, value } = e.target;
+    setPost({ ...post, [name]: value });
   };
+  
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Post data before dispatching:", post);
     dispatch(addPost(post)); 
     setPost({
       name: '',
       category: '',
-      picture: null,
+      picture: '',
       description: '',
       coordinates: '',
     });
@@ -46,8 +45,8 @@ const AddPost = () => {
           <input type="text" name="category" value={post.category} onChange={handleChange} />
         </div>
         <div>
-          <label>Picture:</label>
-          <input type="file" name="picture" onChange={handleChange} />
+        <label>Picture URL:</label>
+        <input type="text" name="picture" value={post.picture} onChange={handleChange} />
         </div>
         <div>
           <label>Description:</label>

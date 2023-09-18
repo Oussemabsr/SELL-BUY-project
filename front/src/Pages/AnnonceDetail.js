@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 
 const AnnonceDetail = () => {
   const { id } = useParams();
+  console.log(id); 
 
   const annonce = {
     id: id,

@@ -1,5 +1,5 @@
 import axios from "axios"
-import { CURRENT_USER, FAIL_USER, LOAD_USER, LOGOUT_USER, REGISTER_USER } from "../ActionTypes/user"
+import { CURRENT_USER, FAIL_USER, LOAD_USER, LOGIN_USER, LOGOUT_USER, REGISTER_USER } from "../ActionTypes/user"
 
 
 
@@ -17,7 +17,7 @@ export const login = (user, history) => async (dispatch) => {
     dispatch({ type: LOAD_USER})
     try {
         let result = await axios.post('/api/user/login', user)
-        dispatch({ type: REGISTER_USER, payload: result.data})
+        dispatch({ type: LOGIN_USER, payload: result.data})
     } catch (error) {
         dispatch({type: FAIL_USER, payload: error.response.data.errors})
     }
@@ -28,7 +28,7 @@ export const current = () => async (dispatch) => {
     try {
         const config = {
             headers: {
-                authorization : localStorage.getItem("token")
+                authorization: localStorage.getItem("token")
             }
         }
         let result = await axios.get("/api/user/current", config)
@@ -41,3 +41,6 @@ export const current = () => async (dispatch) => {
 export const logout = () => async (dispatch) => {
     dispatch({ type: LOGOUT_USER })
 }
+
+  
+  

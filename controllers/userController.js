@@ -1,5 +1,6 @@
 const User = require('../models/Users');
 const bcrypt = require('bcrypt');
+const jwt = require("jsonwebtoken");
 
 // Function to register a new user
 exports.registerUser = async (req, res) => {
@@ -24,19 +25,35 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const foundUser = await User.findOne({email})
+    const foundUser = await User.findOne({ email });
+    
     if (!foundUser) {
-        res.status(400).send({error : [{msg :"Bad credential !!"}]})
+      return res.status(400).send({ errors: [{ msg: 'Bad credentials!' }] });
     }
-    const checkPassword = await bcrypt.compare (password , foundUser.password)
+
+    const checkPassword = await bcrypt.compare(password, foundUser.password);
+
     if (!checkPassword) {
-        res.status(400).send({error : [{msg :"Bad credential !!"}]})
+      return res.status(400).send({ errors: [{ msg: 'Bad credentials!' }] });
     }
-    res.status(200).send({ msg: 'User logged in successfully', user: foundUser});
+
+    // Create a JSON Web Token (JWT)
+    const token = jwt.sign(
+      {
+        id: foundUser._id,
+      },
+      process.env.SECRET_KEY,
+      { expiresIn: '1h' }
+    );
+
+    // Send the token along with the response
+    res.status(200).send({ msg: 'User logged in successfully', user: foundUser, token });
   } catch (error) {
-    res.status(400).json({ msg: 'Error logging in user', error });
+    console.error(error);
+    res.status(500).json({ msg: 'Error logging in user', error });
   }
 };
+
 
 // Function to log out a user
 exports.logoutUser = async (req, res) => {

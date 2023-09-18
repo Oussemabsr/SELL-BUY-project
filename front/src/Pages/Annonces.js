@@ -1,44 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
-const fakeAnnouncements = [
-  {
-    id: 1,
-    name: 'Mohamed',
-    email: 'mohamed17@gmail.com',
-    phone: '55555555',
-    address: 'La Soukra, Ariana',
-  },
-  {
-    id: 2,
-    name: 'John Doe',
-    email: 'johndoe@example.com',
-    phone: '12345678',
-    address: 'New York, USA',
-  },
-  {
-    id: 3,
-    name: 'Jane Doe',
-    email: 'janedoe@example.com',
-    phone: '87654321',
-    address: 'London, UK',
-  },
-];
+import { Button } from 'react-bootstrap';
+import { useSelector, useDispatch } from 'react-redux'; // Import useDispatch
+import { fetchPosts } from '../JS/Actions/add'; // Import the fetchPosts action
 
 const Annonces = () => {
-  const annonces = fakeAnnouncements;
+  const dispatch = useDispatch(); // Initialize dispatch
+
+  useEffect(() => {
+    // Fetch posts when the component mounts
+    dispatch(fetchPosts());
+  }, [dispatch]);
+
+  // Get posts from the Redux store
+  const annonces = useSelector((state) => state.postReducer.annonceList);
 
   return (
     <div>
-      <div>
+      <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' }}>
         {annonces.map((annonce) => (
-          <div key={annonce.id} className="annonce">
+          <div key={annonce._id} className="annonce">
             <h3>{annonce.name}</h3>
-            <p>Email: {annonce.email}</p>
-            <p>Phone: {annonce.phone}</p>
-            <p>Address: {annonce.address}</p>
-            <Link to={`/annonce/${annonce.id}`}>
-              <button>View Details</button>
+            <p>Category: {annonce.category}</p>
+            <p>Description: {annonce.description}</p>
+            <Link to={`/AnnonceDetail/${annonce._id}`}>
+              <Button>View Details</Button>
             </Link>
           </div>
         ))}
